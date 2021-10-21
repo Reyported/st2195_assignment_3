@@ -97,40 +97,23 @@ ontime <- tbl(airline2, "ontime")
 airports <- tbl(airline2, "airports")
 carriers <- tbl(airline2, "carriers")
 planes <- tbl(airline2,"planes")
+
+colnames(ontime)
+#give prefixes to prevent ambiguity
+planes2 <- rename(planes, plyear= year, pltailnum=tailnum)
+
 #Q1
  
-colnames(ontime)
-
-res1test <- ontime %>%
-  left_join(ontime, planes, by=c("TailNum"='tailnum')) %>%
-  show_query()
-
-res1a <-  ontime %>%
+q1b <- ontime %>%   inner_join(planes2, by=c('TailNum'='pltailnum'), copy=TRUE) %>%
   filter(DepDelay>'0' & Diverted=='0') %>%
-  group_by(TailNum)%>%
-  summarise(AVGdelay= mean(DepDelay, na.rm = TRUE)) %>%
-  arrange(AVGDelay) %>%
+  group_by(model) %>%
+  summarize(avgDepDelay=mean(DepDelay, na.rm=TRUE))%>%
+  arrange(avgDepDelay) %>%
+  
   show_query()
-
-head(res1a)
-
-res1a <- res1a%>%
-  compute()
-
-res1b <-  left_join(res1a, planes, by=c("TailNum"="tailnum"))%>%
-  show_query()
-
-
-res1b <- res1b %>%
-  compute()
-
-head(res1b)
-
-     
-     
   
 
-write.csv(res1b, "resultsr1b.csv")  
+write.csv(q1b, "resultsr1b.csv")  
 
 
 #Q2
