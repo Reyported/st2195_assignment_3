@@ -117,8 +117,39 @@ write.csv(q1b, "resultsr1b.csv")
 
 
 #Q2
+
+q2b <- ontime %>%
+  left_join(airports, by=c('Dest'='iata'))%>%
+  filter(Cancelled=='0')%>%
+  group_by(Dest)%>%
+  count(Dest) %>%
+  arrange(n)%>%
+  show_query()
+  
+  
+  write.csv(q2b, "resultsr2b.csv")
+  
 #Q3
+
+q3b <- ontime %>%
+  left_join(carriers, by=c('UniqueCarrier'='Code'))%>%
+  group_by(Description)%>%
+  summarise(CANCflights= sum(Cancelled, na.rm=TRUE)) %>%
+  arrange(desc(CANCflights))%>%
+  show_query()
+
+write.csv(q3b, "resultsr3b.csv")
+
 #Q4
 
+q4b <- ontime %>%
+  inner_join(carriers, by=c('UniqueCarrier'='Code')) %>%
+  group_by(Description)%>%
+  mutate(Cancflights = sum(Cancelled, na.rm=TRUE))%>%
+  summarise(ratio=Cancflights/n())%>%
+  show_query()
+
+write.csv(q4b, "resultsr4b.csv")
+  
 #disconnect from the database
 dbDisconnect(airline2)
