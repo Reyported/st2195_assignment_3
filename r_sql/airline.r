@@ -87,7 +87,14 @@ JOIN t1 ON t1.UniqueCarrier=t2.UniqueCarrier
 ORDER BY Ratio DESC"
 res4 <- dbGetQuery(airline2, Crit4)
 write.csv(res4, "resultsr4.csv")
-dbClearResult(res4)
+
+#OR
+Crit4b <- "SELECT carriers.Description as Carrier, avg(ontime.Cancelled)*100 as Cancelled_numer 
+FROM ontime JOIN carriers ON ontime.UniqueCarrier=carriers.Code
+GROUP BY carrier
+ORDER BY Cancelled_numer DESC"
+res4b <- dbGetQuery(airline2, Crit4b)
+write.csv(res4b, "resultsr4b.csv")
 
 
 
@@ -150,6 +157,7 @@ q4b <- ontime %>%
   show_query()
 
 write.csv(q4b, "resultsr4b.csv")
+
   
 #disconnect from the database
 dbDisconnect(airline2)
