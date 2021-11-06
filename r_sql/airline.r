@@ -4,7 +4,6 @@ library(plyr)
 library(dplyr)
 library(dbplyr)
 
-getwd()
         
 #connect to the database
 airline2 <- dbConnect(RSQLite::SQLite(), "airline2.db")
